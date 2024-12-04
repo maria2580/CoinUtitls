@@ -5,7 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="29aaa431-26dc-46e3-9ead-7eaf8d0ad5e3" name="Changes" comment="업비트-바이낸스 거래소의 코인 가격 스프레드에 따른 USDT 환전 시나리오 차트 제공">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/on_thread_data_mine.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/on_thread_data_mine.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/transfer_data.csv" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,18 +23,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "maria2580"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;maria2580&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/maria2580/CoinUtitls.git",
-    "accountId": "1f1549f4-4c7c-43a5-8662-cb806d072767"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/maria2580/CoinUtitls.git&quot;,
+    &quot;accountId&quot;: &quot;1f1549f4-4c7c-43a5-8662-cb806d072767&quot;
   }
-}]]></component>
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
 }</component>
@@ -43,16 +44,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.exchange_rate.executor": "Run",
-    "Python.on_thread_data_mine.executor": "Run",
-    "Python.optimal_coin_transfer_with_api.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "master"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.exchange_rate.executor&quot;: &quot;Run&quot;,
+    &quot;Python.on_thread_data_mine.executor&quot;: &quot;Run&quot;,
+    &quot;Python.optimal_coin_transfer_with_api.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\user\PycharmProjects\CoinUtitls" />
@@ -150,7 +151,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733318567686</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="업비트-바이낸스 거래소의 코인 가격 스프레드에 따른 USDT 환전 시나리오 차트 제공">
+      <option name="closed" value="true" />
+      <created>1733320650841</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1733320650841</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
