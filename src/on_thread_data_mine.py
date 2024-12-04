@@ -1,5 +1,4 @@
 from os import error
-
 import requests
 import time
 import csv
