@@ -1,4 +1,7 @@
+import queue
 from os import error
+from sys import excepthook
+
 import requests
 import time
 import csv
@@ -35,7 +38,7 @@ def get_binance_price(symbol):
 
     # 확인: 사용한 요청 횟수를 출력
     used_weight = response.headers.get('X-MBX-USED-WEIGHT-1M', 'N/A')
-    print(f"현재 사용한 요청 횟수 (1분 기준): {used_weight}")
+    #print(f"현재 사용한 요청 횟수 (1분 기준): {used_weight}")
 
     data = response.json()
     return float(data['price'])
@@ -76,13 +79,12 @@ def calculate_transfer_value(krw_balance):
             value_after_transfer = amount_transferred * binance_price_usd
 
         results[coin] = value_after_transfer
-        print(
-            f"업비트에서 바이낸스로 출금시: {krw_balance} KRW -> {coin} : {amount_purchased:.4f}개 -> 네트워크 피 계산 뒤 바이낸스 : {coin} {amount_transferred:.4f}개 -> 바이낸스의 {coin} 가격으로 계산된 USDT의 양: {value_after_transfer:.5f} USDT")
+        #print(f"업비트에서 바이낸스로 출금시: {krw_balance} KRW -> {coin} : {amount_purchased:.4f}개 -> 네트워크 피 계산 뒤 바이낸스 : {coin} {amount_transferred:.4f}개 -> 바이낸스의 {coin} 가격으로 계산된 USDT의 양: {value_after_transfer:.5f} USDT")
 
-    print("\n최종 결과:")
-    print(f"KRW -> XRP -> USDT: {results.get('XRP', 0):.5f} USDT")
-    print(f"KRW -> TRX -> USDT: {results.get('TRX', 0):.5f} USDT")
-    print(f"KRW -> USDT 송금 후: {results.get('USDT', 0):.5f} USDT")
+    #print("\n최종 결과:")
+    #print(f"KRW -> XRP -> USDT: {results.get('XRP', 0):.5f} USDT")
+    #print(f"KRW -> TRX -> USDT: {results.get('TRX', 0):.5f} USDT")
+    #print(f"KRW -> USDT 송금 후: {results.get('USDT', 0):.5f} USDT")
 
     return results
 
@@ -114,11 +116,12 @@ class LivePlot(QMainWindow):
         self.trx_data = []
         self.usdt_data = []
         self.exchange_rate_data = []
-
+        self.exchange_rate_KRW_USDT_data = []
         # Load existing data if the file exists
         if os.path.exists('transfer_data.csv'):
+            start=pd.Timestamp.now()
             self.load_existing_data()
-
+            print(f'{(pd.Timestamp.now()-start)}초 만에 데이터 준비 완료')
         # Create buttons for different timeframes
         button_layout = QHBoxLayout()
         self.timeframes = ['1s', '10s', '30s', '1min', '3min', '5min', '15min', '30min', '1h', '4h', '1d']
@@ -141,20 +144,37 @@ class LivePlot(QMainWindow):
                 self.trx_data.append(row['trx_value'])
                 self.usdt_data.append(row['usdt_value'])
                 self.exchange_rate_data.append(row['exchange_rate'])
+                self.exchange_rate_KRW_USDT_data.append(row['exchange_rate_KRW_USDT'])
 
             # Plot the existing data
-            self.update_plot(None, None, None, None, None)
+            self.update_plot(None, None, None, None, None, None)
         except Exception as e:
             print(f"Error loading existing data: {e}")
 
-    def update_plot(self, timestamp, xrp_value, trx_value, usdt_value, exchange_rate):
+    def update_plot(self, timestamp, xrp_value, trx_value, usdt_value, exchange_rate, exchange_rate_KRW_USDT):
 
         if timestamp is not None:
             self.timestamp_data.append(timestamp)
-            self.xrp_data.append(xrp_value)
-            self.trx_data.append(trx_value)
-            self.usdt_data.append(usdt_value)
-            self.exchange_rate_data.append(exchange_rate)
+            try:
+                self.xrp_data.append(xrp_value)
+            except:
+                self.xrp_data.append(1)
+            try:
+                self.trx_data.append(trx_value)
+            except:
+                self.trx_data.append(1)
+            try:
+                self.usdt_data.append(usdt_value)
+            except:
+                self.usdt_data.append(1)
+            try:
+                self.exchange_rate_data.append(exchange_rate)
+            except:
+                self.exchange_rate_data.append(1)
+            try:
+                self.exchange_rate_KRW_USDT_data.append(exchange_rate_KRW_USDT)
+            except:
+                self.exchange_rate_KRW_USDT_data.append(1)
 
         self.plot_average(self.current_timeframe)
 
@@ -167,7 +187,8 @@ class LivePlot(QMainWindow):
                 'xrp_value': self.xrp_data,
                 'trx_value': self.trx_data,
                 'usdt_value': self.usdt_data,
-                'exchange_rate': self.exchange_rate_data
+                'exchange_rate': self.exchange_rate_data,
+                'exchange_rate_KRW_USDT': self.exchange_rate_KRW_USDT_data
             })
             df['timestamp'] = pd.to_datetime(df['timestamp'])
             df.set_index('timestamp', inplace=True)
@@ -207,7 +228,10 @@ class LivePlot(QMainWindow):
             self.ax.plot(resampled_df.index, resampled_df['xrp_value'], label="XRP to USDT", color="blue")
             self.ax.plot(resampled_df.index, resampled_df['trx_value'], label="TRX to USDT", color="orange")
             self.ax.plot(resampled_df.index, resampled_df['usdt_value'], label="USDT to USDT", color="green")
-            self.ax2.plot(resampled_df.index, resampled_df['exchange_rate'], label="Exchange Rate (krw/usd)", color="grey", linestyle="--")
+            self.ax2.plot(resampled_df.index, resampled_df['exchange_rate'], label="Exchange Rate (krw/usd)",
+                          color="grey", linestyle="--")
+            self.ax2.plot(resampled_df.index, resampled_df['exchange_rate_KRW_USDT'], label="Exchange Rate (krw/usdt)",
+                          color="black")
 
             self.ax.set_xlabel("Time")
             self.ax.set_ylabel("USDT Value")
@@ -230,35 +254,54 @@ def save_data_to_file(data):
         else:
             df = pd.DataFrame(data)
         df.to_csv('transfer_data.csv', index=False)
-        print("데이터가 transfer_data.csv 파일에 저장되었습니다.")
+        #print("데이터가 transfer_data.csv 파일에 저장되었습니다.")
     except Exception as e:
         print(f"Error saving data: {e}")
 
 
-def run_periodic_task(live_plot):
+def run_periodic_task(results_queue):
     krw_balance = 10000000
-    exchange_rate = get_exchange_rate()
 
     while True:
-        results = calculate_transfer_value(krw_balance)
+        exchange_rate = get_exchange_rate()
+        exchange_rate_KRW_USDT = get_upbit_price("KRW-USDT")
+        temp = calculate_transfer_value(krw_balance)
+        results={}
         results['timestamp'] = pd.Timestamp.now()
+        results['xrp_value'] = temp.get('XRP', None)
+        results['trx_value'] = temp.get('TRX', None)
+        results['usdt_value'] = temp.get('USDT', None)
         results['exchange_rate'] = exchange_rate
-
+        results['exchange_rate_KRW_USDT'] = exchange_rate_KRW_USDT
         save_data_to_file([results])
+        results_queue.put(results)
+        #live_plot.update_plot(results['timestamp'], results.get('xrp_value', None), results.get('trx_value', None),results.get('usdt_value', None), results['exchange_rate'], exchange_rate_KRW_USDT)
 
-        live_plot.update_plot(results['timestamp'], results.get('XRP', None), results.get('TRX', None), results.get('USDT', None), results['exchange_rate'])
 
-        time.sleep(1)
+def run_periodic_task2(live_plot,results_queue):
+
+    while True:
+        results = results_queue.get()  # 데이터 소비
+        if results is None:
+            break
+        live_plot.update_plot(results['timestamp'], results.get('xrp_value', None), results.get('trx_value', None),results.get('usdt_value', None), results['exchange_rate'], results['exchange_rate_KRW_USDT'])
 
 
 def main():
     app = QApplication([])
     live_plot = LivePlot()
     live_plot.show()
+    results_queue= queue.Queue()
 
-    data_thread = threading.Thread(target=run_periodic_task, args=(live_plot,))
+    data_thread = threading.Thread(target=run_periodic_task, args=(results_queue,))
     data_thread.daemon = True
+    view_thread = threading.Thread(target=run_periodic_task2, args=(live_plot,results_queue,))
+    view_thread.daemon = True
+
+
     data_thread.start()
+    time.sleep(1)
+    view_thread.start()
 
     app.exec_()
 
