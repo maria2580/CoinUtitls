@@ -155,26 +155,11 @@ class LivePlot(QMainWindow):
 
         if timestamp is not None:
             self.timestamp_data.append(timestamp)
-            try:
-                self.xrp_data.append(xrp_value)
-            except:
-                self.xrp_data.append(1)
-            try:
-                self.trx_data.append(trx_value)
-            except:
-                self.trx_data.append(1)
-            try:
-                self.usdt_data.append(usdt_value)
-            except:
-                self.usdt_data.append(1)
-            try:
-                self.exchange_rate_data.append(exchange_rate)
-            except:
-                self.exchange_rate_data.append(1)
-            try:
-                self.exchange_rate_KRW_USDT_data.append(exchange_rate_KRW_USDT)
-            except:
-                self.exchange_rate_KRW_USDT_data.append(1)
+            self.xrp_data.append(xrp_value)
+            self.trx_data.append(trx_value)
+            self.usdt_data.append(usdt_value)
+            self.exchange_rate_data.append(exchange_rate)
+            self.exchange_rate_KRW_USDT_data.append(exchange_rate_KRW_USDT)
 
         self.plot_average(self.current_timeframe)
 
